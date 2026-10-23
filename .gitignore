@@ -32,3 +32,6 @@ coverage/
 # Temp
 *.tmp
 *.swp
+
+# KiroCrew local config
+.kiro/
