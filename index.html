@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="SkillSpring helps students build career readiness through focused missions, skill tracking, and interview practice.">
+  <title>SkillSpring — Your next step starts here</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="SkillSpring home">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span>skillspring<span class="brand-dot">.</span></span>
+      </a>
+      <div class="workspace-label">YOUR WORKSPACE</div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-view="overview"><span class="nav-icon">⌂</span> Overview</button>
+        <button class="nav-item" data-view="roadmap"><span class="nav-icon">↗</span> My roadmap</button>
+        <button class="nav-item" data-view="missions"><span class="nav-icon">◷</span> Daily missions <span class="nav-count" id="navMissionCount">0</span></button>
+        <button class="nav-item" data-view="interview"><span class="nav-icon">✳</span> Interview studio</button>
+        <button class="nav-item" data-view="skills"><span class="nav-icon">▤</span> Skill assessment</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card">
+          <div class="help-spark">✦</div>
+          <strong>Small steps count.</strong>
+          <p>Your career isn't built in one day. Just keep showing up.</p>
+        </div>
+        <div class="profile-row">
+          <div class="avatar" id="avatarInitial">S</div>
+          <div class="profile-text"><strong id="profileName">Your workspace</strong><span>Career explorer</span></div>
+          <button class="icon-button" id="editProfileBtn" title="Edit profile" aria-label="Edit profile">•••</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbPage">Overview</strong></div>
+        <div class="topbar-actions">
+          <span class="saved-indicator"><span class="live-dot"></span> Progress saved locally</span>
+          <button class="avatar small-avatar" id="topAvatar" aria-label="Edit profile">S</button>
+        </div>
+      </header>
+
+      <section class="view active-view" id="view-overview">
+        <div class="welcome-row">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> YOUR CAREER, YOUR PACE</div>
+            <h1>Make your next move<span class="heading-period">.</span></h1>
+            <p class="subheading" id="welcomeSubtitle">A little progress today makes a big difference tomorrow.</p>
+          </div>
+          <button class="button button-primary" data-goto="missions"><span>＋</span> Start today's focus</button>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-copy">
+            <div class="hero-tag"><span>✦</span> YOUR PERSONAL GROWTH PLAN</div>
+            <h2>Ready isn't a feeling.<br><em>It's a practice.</em></h2>
+            <p>Build real skills, practise your story, and make career preparation feel manageable — one focused session at a time.</p>
+            <button class="button button-white" data-goto="roadmap">Explore my roadmap <span>↗</span></button>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="art-card art-card-main"><div class="art-card-top"><span class="tiny-label">WEEKLY MOMENTUM</span><span class="trend">↗ 12%</span></div><div class="art-number" id="heroCompletion">0%</div><div class="art-sub">of your missions completed</div><div class="mini-bars"><i style="height:34%"></i><i style="height:53%"></i><i style="height:42%"></i><i style="height:72%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:100%"></i></div><div class="bar-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
+            <div class="floating-badge badge-check">✓ <span>One step at a time</span></div>
+            <div class="floating-badge badge-star">✦</div>
+          </div>
+        </div>
+
+        <div class="section-heading-row">
+          <div><h2 class="section-title">Your progress at a glance</h2><p class="section-subtitle">A snapshot of the work you're putting in.</p></div>
+          <button class="text-button" data-goto="skills">View skill profile <span>→</span></button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Readiness score</span><span class="stat-icon lilac">✳</span></div><div class="stat-value"><span id="readinessScore">24</span><small>/100</small></div><div class="stat-foot"><span class="stat-dot lilac-dot"></span><span id="readinessCaption">Your baseline is set</span></div><div class="progress-track"><div class="progress-fill lilac-fill" id="readinessBar" style="width:24%"></div></div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Missions completed</span><span class="stat-icon mint">✓</span></div><div class="stat-value"><span id="completedCount">0</span><small id="totalMissionsLabel">/6</small></div><div class="stat-foot"><span class="stat-dot mint-dot"></span><span>Every task moves you forward</span></div><div class="progress-track"><div class="progress-fill mint-fill" id="missionBar" style="width:0%"></div></div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Interview practice</span><span class="stat-icon peach">✎</span></div><div class="stat-value"><span id="practiceCount">0</span><small> sessions</small></div><div class="stat-foot"><span class="stat-dot peach-dot"></span><span>Confidence grows with reps</span></div><div class="stat-mini-note">Your practice history stays on this device.</div></article>
+        </div>
+
+        <div class="lower-grid">
+          <section class="panel focus-panel">
+            <div class="panel-header"><div><h3>Today's focus</h3><p>Three small wins beat a perfect plan.</p></div><button class="kebab" data-goto="missions" aria-label="View all missions">↗</button></div>
+            <div class="focus-list" id="overviewMissions"></div>
+            <button class="button button-outline full-button" data-goto="missions">View all missions <span>→</span></button>
+          </section>
+          <section class="panel pathway-panel">
+            <div class="panel-header"><div><h3>Your career pathway</h3><p>Keep the big picture in sight.</p></div><span class="pill pill-lilac" id="rolePill">Business Analyst</span></div>
+            <div class="pathway-steps" id="pathwaySteps"></div>
+            <button class="text-button pathway-link" data-goto="roadmap">Open full roadmap <span>→</span></button>
+          </section>
+        </div>
+        <footer class="app-footer"><span>SkillSpring © 2026</span><span>Built for progress, not pressure.</span><button id="resetDataBtn" class="subtle-button">Reset demo data</button></footer>
+      </section>
+
+      <section class="view" id="view-roadmap">
+        <div class="page-heading"><div class="eyebrow"><span class="eyebrow-line"></span> YOUR NEXT STEPS</div><h1>Your roadmap<span class="heading-period">.</span></h1><p class="subheading">A flexible path to help you build the skills your target role asks for.</p></div>
+        <div class="roadmap-controls panel"><label for="targetRole">I'm preparing for</label><div class="role-select-row"><select id="targetRole"><option>Business Analyst</option><option>Software Developer</option><option>Data Analyst</option><option>Product Associate</option></select><span class="role-note">Your roadmap updates with your target.</span></div></div>
+        <div class="roadmap-intro"><div><span class="pill pill-mint">YOUR PLAN</span><h2 id="roadmapTitle">From curious to career-ready</h2><p id="roadmapDescription">Build core knowledge, practise communicating your thinking, and turn learning into proof.</p></div><div class="roadmap-progress"><span id="roadmapPercent">0%</span><small>roadmap progress</small><div class="progress-track"><div class="progress-fill mint-fill" id="roadmapBar"></div></div></div></div>
+        <div class="roadmap-list" id="roadmapList"></div>
+      </section>
+
+      <section class="view" id="view-missions">
+        <div class="page-heading"><div class="eyebrow"><span class="eyebrow-line"></span> ONE DAY AT A TIME</div><h1>Daily missions<span class="heading-period">.</span></h1><p class="subheading">Pick a task, give it your attention, and count it as a win.</p></div>
+        <div class="mission-summary"><div><span class="summary-label">YOUR MOMENTUM</span><strong id="missionSummaryText">0 of 6 completed</strong></div><div class="summary-progress"><div class="progress-track"><div class="progress-fill mint-fill" id="missionSummaryBar"></div></div></div><span class="summary-spark">✦</span></div>
+        <div class="mission-toolbar"><div class="filter-tabs"><button class="filter-tab active" data-filter="all">All missions</button><button class="filter-tab" data-filter="open">To do</button><button class="filter-tab" data-filter="done">Completed</button></div><button class="button button-outline" id="addMissionBtn">＋ Add a mission</button></div>
+        <div class="missions-grid" id="missionsGrid"></div>
+      </section>
+
+      <section class="view" id="view-interview">
+        <div class="page-heading"><div class="eyebrow"><span class="eyebrow-line"></span> PRACTICE MAKES PREPARED</div><h1>Interview studio<span class="heading-period">.</span></h1><p class="subheading">Think out loud, structure your answer, and learn from every attempt.</p></div>
+        <div class="interview-layout">
+          <section class="panel interview-main">
+            <div class="question-top"><span class="pill pill-lilac" id="questionCategory">BEHAVIOURAL</span><span class="question-counter" id="questionCounter">QUESTION 1 OF 8</span></div>
+            <div class="question-progress"><div id="questionProgressBar"></div></div>
+            <h2 id="questionText">Tell me about yourself and what brings you to this role.</h2>
+            <p class="question-hint" id="questionHint">Keep it relevant: present, past, and why this opportunity.</p>
+            <label class="field-label" for="answerInput">Your answer</label>
+            <textarea id="answerInput" rows="7" placeholder="Start with your main point. You don't need a perfect answer on the first try…"></textarea>
+            <div class="answer-tools"><span id="wordCount">0 words</span><button class="text-button" id="clearAnswerBtn">Clear answer</button></div>
+            <div class="answer-actions"><button class="button button-outline" id="prevQuestionBtn">← Previous</button><button class="button button-primary" id="reviewAnswerBtn">Review my answer <span>→</span></button></div>
+            <div id="feedbackBox" class="feedback-box hidden" aria-live="polite"></div>
+          </section>
+          <aside class="panel interview-side"><div class="side-illustration">✳</div><h3>A simple answer framework</h3><p>Use this structure to make your response easier to follow.</p><div class="framework-item"><span class="framework-letter">P</span><div><strong>Point</strong><small>Lead with your main message.</small></div></div><div class="framework-item"><span class="framework-letter">R</span><div><strong>Reason</strong><small>Explain your thinking briefly.</small></div></div><div class="framework-item"><span class="framework-letter">E</span><div><strong>Example</strong><small>Give one specific example.</small></div></div><div class="framework-item"><span class="framework-letter">P</span><div><strong>Point again</strong><small>Connect it back to the role.</small></div></div><div class="tip-box"><span>✦</span><p><strong>Remember:</strong> Specific and honest beats memorised and perfect.</p></div><button class="button button-outline full-button" id="nextQuestionBtn">Next question <span>→</span></button></aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-skills">
+        <div class="page-heading"><div class="eyebrow"><span class="eyebrow-line"></span> KNOW YOUR STARTING POINT</div><h1>Your skill profile<span class="heading-period">.</span></h1><p class="subheading">Rate yourself honestly. This is a map, not a judgement.</p></div>
+        <div class="skills-layout"><section class="panel skills-panel"><div class="panel-header"><div><h3>Self-assessment</h3><p>Choose the level that best describes you today.</p></div><span class="pill pill-lilac">EDITABLE</span></div><form id="skillsForm"><div id="skillSliders"></div><button class="button button-primary" type="submit">Save my assessment <span>→</span></button></form></section><aside class="panel skills-insight"><div class="insight-icon">✦</div><h3>Your next best step</h3><p id="insightText">Your assessment will help you choose a focused next step.</p><div class="insight-divider"></div><div class="insight-stat"><span>Readiness score</span><strong id="skillsReadiness">24/100</strong></div><div class="insight-stat"><span>Strongest skill</span><strong id="strongestSkill">Communication</strong></div><div class="insight-stat"><span>Growth opportunity</span><strong id="growthSkill">Technical basics</strong></div><button class="button button-outline full-button" data-goto="roadmap">Match to my roadmap <span>→</span></button></aside></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="profileDialog" class="modal">
+    <form method="dialog" id="profileForm"><div class="modal-head"><div><span class="eyebrow">MAKE IT YOURS</span><h2>Your workspace</h2></div><button class="icon-button" value="cancel" aria-label="Close">✕</button></div><label class="field-label" for="nameInput">What should we call you?</label><input id="nameInput" maxlength="40" placeholder="Your name"><label class="field-label" for="goalInput">Your current career goal</label><input id="goalInput" maxlength="90" placeholder="e.g. Become confident in interviews"><div class="modal-actions"><button class="button button-outline" value="cancel">Cancel</button><button class="button button-primary" id="saveProfileBtn" value="save">Save profile</button></div></form>
+  </dialog>
+  <dialog id="missionDialog" class="modal">
+    <form method="dialog" id="missionForm"><div class="modal-head"><div><span class="eyebrow">MAKE A LITTLE PROGRESS</span><h2>Add a mission</h2></div><button class="icon-button" value="cancel" aria-label="Close">✕</button></div><label class="field-label" for="missionTitleInput">Mission title</label><input id="missionTitleInput" maxlength="80" required placeholder="e.g. Practise 5 aptitude questions"><label class="field-label" for="missionCategoryInput">Category</label><select id="missionCategoryInput"><option>Core skills</option><option>Communication</option><option>Interview prep</option><option>Career research</option><option>Project work</option></select><label class="field-label" for="missionTimeInput">Time needed</label><select id="missionTimeInput"><option>10 min</option><option>15 min</option><option>20 min</option><option>30 min</option><option>45 min</option><option>60 min</option></select><div class="modal-actions"><button class="button button-outline" value="cancel">Cancel</button><button class="button button-primary" id="saveMissionBtn" value="save">Add mission</button></div></form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
