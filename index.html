@@ -15,24 +15,14 @@
         <span class="brand-mark"><span></span><span></span><span></span></span>
         <span>skillspring<span class="brand-dot">.</span></span>
       </a>
-      <p class="auth-tagline">Sign in with a one-time code sent to your email. No password needed.</p>
+      <p class="auth-tagline">We'll email you a secure sign-in link. No password or code needed.</p>
       <form id="authForm" autocomplete="on">
-        <div class="auth-step" id="otpRequestStep">
-          <label class="field-label first" for="authEmail">Email address</label>
-          <input id="authEmail" type="email" required placeholder="you@example.com" autocomplete="email" inputmode="email">
-        </div>
-        <div class="auth-step hidden" id="otpVerifyStep">
-          <p class="auth-sub">Enter the 6-digit code sent to <strong id="sentToEmail"></strong></p>
-          <div class="otp-inputs" id="otpInputs" role="group" aria-label="One-time passcode"></div>
-        </div>
+        <label class="field-label first" for="authEmail">Email address</label>
+        <input id="authEmail" type="email" required placeholder="you@example.com" autocomplete="email" inputmode="email">
         <div class="auth-message" id="authMessage" role="status" aria-live="polite"></div>
-        <button class="button button-primary full-button auth-submit" type="submit" id="authSubmitBtn">Send login code</button>
-        <div class="auth-links hidden" id="authLinks">
-          <button type="button" class="text-button" id="resendBtn">Resend code</button>
-          <button type="button" class="text-button" id="changeEmailBtn">Use a different email</button>
-        </div>
+        <button class="button button-primary full-button auth-submit" type="submit" id="authSubmitBtn">Email me a sign-in link</button>
       </form>
-      <p class="auth-note">Secured by Supabase email one-time passcodes.</p>
+      <p class="auth-note">Secured by Supabase magic-link sign-in.</p>
     </div>
   </div>
 

@@ -194,31 +194,20 @@
   }
   function renderAll(){updateTopBits();renderOverview();renderRoadmap();renderMissions();renderSkills();updateQuestion()}
 
-  // ---- Supabase authentication (email OTP) + session gating ----
-  let authStep = "request";   // "request" = enter email, "verify" = enter 6-digit code
+  // ---- Supabase authentication (magic link) + session gating ----
+  const SITE_URL = "https://skillspring-virid.vercel.app/";   // must be listed in Supabase Redirect URLs
+  const BTN_IDLE = "Email me a sign-in link";
   function setMessage(text,type){const el=$("authMessage");if(!el)return;if(!text){el.textContent="";el.className="auth-message";return}el.textContent=text;el.className="auth-message show "+(type||"info")}
   function setBusy(on){const b=$("authSubmitBtn");if(b)b.disabled=!!on}
   function setSaveStatus(mode){const el=$("saveStatus");if(!el)return;const map={local:"Progress saved locally",syncing:"Syncing to cloud\u2026",cloud:"Progress synced to cloud",offline:"Saved locally \u2014 cloud unavailable"};el.innerHTML='<span class="live-dot"></span> '+(map[mode]||map.local)}
   function updateAuthChip(){const el=$("userEmail");if(el)el.textContent=currentUser?.email||""}
 
-  // 6-digit OTP input row
-  function buildOtpInputs(){
-    const wrap=$("otpInputs");if(!wrap||wrap.childElementCount)return;
-    for(let i=0;i<6;i++){const inp=document.createElement("input");inp.type="text";inp.inputMode="numeric";inp.autocomplete="one-time-code";inp.maxLength=1;inp.setAttribute("aria-label","Digit "+(i+1));wrap.appendChild(inp)}
-    wrap.addEventListener("input",e=>{const t=e.target;if(!/^\d$/.test(t.value)){t.value="";return}const a=[...wrap.children];const idx=a.indexOf(t);if(idx<a.length-1)a[idx+1].focus()});
-    wrap.addEventListener("keydown",e=>{if(e.key==="Backspace"&&!e.target.value){const a=[...wrap.children];const idx=a.indexOf(e.target);if(idx>0)a[idx-1].focus()}});
-    wrap.addEventListener("paste",e=>{e.preventDefault();const d=(e.clipboardData.getData("text").match(/\d/g)||[]).slice(0,6);const a=[...wrap.children];d.forEach((v,i)=>{if(a[i])a[i].value=v});(a[d.length]||a[5]).focus()});
-  }
-  function collectOtp(){const w=$("otpInputs");return w?[...w.children].map(i=>i.value).join(""):""}
-  function clearOtp(){const w=$("otpInputs");if(w)[...w.children].forEach(i=>i.value="")}
-  function goRequestStep(){authStep="request";$("otpRequestStep").classList.remove("hidden");$("otpVerifyStep").classList.add("hidden");$("authLinks").classList.add("hidden");$("authSubmitBtn").textContent="Send login code"}
-  function goVerifyStep(email){authStep="verify";buildOtpInputs();$("otpRequestStep").classList.add("hidden");$("otpVerifyStep").classList.remove("hidden");$("sentToEmail").textContent=email;$("authLinks").classList.remove("hidden");$("authSubmitBtn").textContent="Verify & continue";clearOtp();const f=$("otpInputs").firstElementChild;if(f)f.focus()}
-
   function showAuth(){
     currentUser=null;
     $("appShell").classList.add("hidden");
     $("authScreen").classList.remove("hidden");
-    goRequestStep();setMessage("","clear");setSaveStatus("local");
+    setMessage("","clear");setSaveStatus("local");
+    setBusy(false);$("authSubmitBtn").textContent=BTN_IDLE;
   }
 
   // ---- Supabase database (user_data) with localStorage fallback ----
@@ -266,37 +255,26 @@
     $("appShell").classList.remove("hidden");
   }
 
-  async function sendOtp(email){
-    const {data,error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
+  async function sendMagicLink(email){
+    const {data,error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:SITE_URL,shouldCreateUser:true}});
     if(error)throw error;
-    return data; // data.session is usually null because the code was emailed
+    return data; // data.session is null because the sign-in link was emailed
   }
   async function handleAuthSubmit(e){
     e.preventDefault();
     if(!supabase){setMessage("Supabase is unavailable \u2014 the CDN script did not load.","error");return}
-    if(authStep==="request"){
-      const email=$("authEmail").value.trim();
-      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setMessage("Enter a valid email address.","error");return}
-      setBusy(true);$("authSubmitBtn").textContent="Sending code\u2026";
-      try{
-        const data=await sendOtp(email);
-        if(data&&data.session){setMessage("","clear");await startApp(data.session.user)}
-        else{goVerifyStep(email);setMessage("Code sent. Check your inbox (and spam folder).","success")}
-      }catch(err){setMessage(err?.message||"Could not send the code. Please try again.","error")}
-      finally{setBusy(false);$("authSubmitBtn").textContent=authStep==="request"?"Send login code":"Verify & continue"}
-    }else{
-      const token=collectOtp();
-      if(token.length!==6){setMessage("Enter all 6 digits of the code.","error");return}
-      const email=$("authEmail").value.trim();
-      setBusy(true);$("authSubmitBtn").textContent="Verifying\u2026";
-      try{
-        const {data,error}=await supabase.auth.verifyOtp({email,token,type:"email"});
-        if(error)throw error;
-        if(data&&data.session){setMessage("Signed in.","success");await startApp(data.session.user)}
-        else setMessage("Couldn't verify that code. Request a new one.","error");
-      }catch(err){setMessage(err?.message||"That code didn't work. Request a new one.","error")}
-      finally{setBusy(false);$("authSubmitBtn").textContent=authStep==="request"?"Send login code":"Verify & continue"}
+    const email=$("authEmail").value.trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setMessage("Enter a valid email address.","error");return}
+    setBusy(true);$("authSubmitBtn").textContent="Sending link\u2026";
+    try{
+      const data=await sendMagicLink(email);
+      if(data&&data.session){setMessage("","clear");await startApp(data.session.user)}
+      else setMessage("Sign-in link sent to "+email+". Open your inbox and click the link to continue.","success")
+    }catch(err){
+      const m=err&&err.message?err.message:"";
+      setMessage(/rate limit/i.test(m)?"Too many sign-in requests \u2014 please wait about a minute and try again.":(m||"Could not send the sign-in link. Please try again."),"error")
     }
+    finally{setBusy(false);$("authSubmitBtn").textContent=BTN_IDLE}
   }
   async function handleLogout(){
     if(!supabase)return;
@@ -306,22 +284,21 @@
   function bindAuthControls(){
     $("authForm").addEventListener("submit",handleAuthSubmit);
     $("logoutBtn").addEventListener("click",handleLogout);
-    $("resendBtn").addEventListener("click",async()=>{
-      if(authStep!=="verify")return;const email=$("authEmail").value.trim();const b=$("resendBtn");b.disabled=true;
-      try{await sendOtp(email);setMessage("A new code is on its way.","success")}
-      catch(err){setMessage(err?.message||"Couldn't resend the code.","error")}
-      finally{b.disabled=false}
-    });
-    $("changeEmailBtn").addEventListener("click",()=>{goRequestStep();setMessage("","clear");$("authEmail").focus()});
   }
+  // Remove ?code= / #access_token= from the address bar once handled.
+  function cleanRedirectUrl(){try{if(window.location.search||window.location.hash)history.replaceState({},document.title,window.location.pathname)}catch(e){}}
   async function initAuth(){
     if(!supabase){setMessage("Could not reach Supabase. Ensure the supabase-js CDN script loaded and you are online.","error");setBusy(true);return}
-    bindAuthControls();goRequestStep();
-    const {data}=await supabase.auth.getSession();
-    if(data.session){await startApp(data.session.user)}else{showAuth()}
+    const arriving=/(code=|access_token=)/.test(window.location.search+window.location.hash);
+    bindAuthControls();
+    if(arriving)setMessage("Confirming your sign-in link\u2026","info");
+    const {data}=await supabase.auth.getSession();   // supabase-js exchanges the magic-link token automatically
+    cleanRedirectUrl();
+    if(data.session){await startApp(data.session.user)}
+    else{showAuth();if(arriving)setMessage("That sign-in link didn't work or has expired. Request a new one.","error")}
     supabase.auth.onAuthStateChange((event,session)=>{
       if(event==="SIGNED_OUT"){showAuth()}
-      else if(session&&(!currentUser||session.user.id!==currentUser.id)){startApp(session.user)}
+      else if(session&&(!currentUser||session.user.id!==currentUser.id)){cleanRedirectUrl();startApp(session.user)}
     });
   }
   initAuth();
