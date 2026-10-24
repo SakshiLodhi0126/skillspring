@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Local env / secrets (never commit)
+.env
+.env.local
+.env.*.local
+
+# Build / deploy output
+.vercel
+dist/
+out/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
